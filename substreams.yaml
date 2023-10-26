@@ -15,9 +15,25 @@ binaries:
     file: ./target/wasm32-unknown-unknown/release/substreams.wasm
 
 modules:
-  - name: map_block
+  - name: map_trades_created
     kind: map
     inputs:
       - source: sf.ethereum.type.v2.Block
     output:
-      type: proto:tradescrow.types.v1.BlockMeta
+      type: proto:tradescrow.types.v1.Trades
+
+  - name: store_trades_created
+    kind: store
+    updatePolicy: set
+    valueType: proto:tradescrow.types.v1.Trades
+    inputs:
+      - map: map_trades_created
+
+  - name: map_extract_data_types
+    kind: map
+    initialBlock: 12369621
+    inputs:
+      - source: sf.ethereum.type.v2.Block
+      - store: store_trades_created
+    output:
+      type: proto:tradescrow.types.v1.Events

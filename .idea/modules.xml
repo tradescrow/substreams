@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/substreams-ethereum-quickstart.iml" filepath="$PROJECT_DIR$/.idea/substreams-ethereum-quickstart.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/tradescrow-substreams.iml" filepath="$PROJECT_DIR$/.idea/tradescrow-substreams.iml" />
     </modules>
   </component>
 </project>

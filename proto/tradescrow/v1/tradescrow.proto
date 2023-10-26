@@ -2,9 +2,148 @@ syntax = "proto3";
 
 package tradescrow.types.v1;
 
+enum AssetType {
+  ERC20 = 0;
+  ERC1155 = 1;
+  ERC721 = 2;
+}
+
+enum Status {
+  Open = 0;
+  Accepted = 1;
+  Rejected = 2;
+  Canceled = 3;
+}
+
+message Asset {
+  string address = 1;
+  string id = 2;
+  string amount = 3;
+  AssetType asset_type = 4;
+}
+
+message Trades {
+  repeated Trade trades = 1;
+}
+
+message Trade {
+  string id = 1;
+  Status status = 2;
+  string party = 3;
+  string counterparty = 4;
+  string fee = 5;
+  repeated Asset party_assets = 6;
+  repeated Asset counterparty_assets = 7;
+
+  uint64 log_ordinal = 30;
+  uint32 log_index = 31;
+  string transaction_id = 32;
+  uint64 created_at_timestamp = 33;
+  uint64 created_at_block_number = 34;
+}
+
+message Events {
+  repeated TradeEvent trade_events = 1;
+  repeated FeeEvent fee_events = 2;
+  repeated Transaction transactions = 3;
+
+  message TradeEvent {
+    oneof type {
+      TradeCreated created = 1;
+      TradeAccepted accepted = 2;
+      TradeRejected rejected = 3;
+      TradeCanceled canceled = 4;
+    }
+
+    uint64 log_ordinal = 100;
+    uint32 log_index = 101;
+    string transaction_id = 102;
+    uint64 timestamp = 103;
+    uint64 block_number = 104;
+
+    message TradeCreated {
+      string from = 1;
+      string tradeId = 2;
+      string counterparty = 3;
+      repeated Asset party_assets = 4;
+      repeated Asset counterparty_assets = 5;
+    }
+
+    message TradeAccepted {
+      string from = 1;
+      string trade_id = 2;
+    }
+
+    message TradeRejected {
+      string from = 1;
+      string trade_id = 2;
+    }
+
+    message TradeCanceled {
+      string from = 1;
+      string trade_id = 2;
+    }
+  }
+
+  message FeeEvent {
+    oneof type {
+      FeePaid paid = 1;
+      FeeRefunded refunded = 2;
+      FeeReleased released = 3;
+      FeeUpdated updated = 4;
+      TreasuryUpdated treasury_updated = 5;
+    }
+
+    uint64 log_ordinal = 100;
+    uint32 log_index = 101;
+    string transaction_id = 102;
+    uint64 timestamp = 103;
+    uint64 block_number = 104;
+
+    message FeePaid {
+      string from = 1;
+      string amount = 2;
+    }
+
+    message FeeRefunded {
+      string from = 1;
+      string amount = 2;
+    }
+
+    message FeeReleased {
+      string amount = 1;
+    }
+
+    message FeeUpdated {
+      string from = 1;
+      string token = 2;
+      string fee = 3;
+    }
+
+    message TreasuryUpdated {
+      string from = 1;
+      string treasury = 2;
+    }
+  }
+
+
+  message Transaction {
+    string id = 1;
+    uint64 block_number = 2;
+    uint64 timestamp = 3;
+    uint64 gas_used = 4;
+    // Integer
+    string gas_price = 5;
+    uint64 log_ordinal = 6;
+  }
+}
+
+
+/*
 message BlockMeta {
   string hash = 1;
   uint64 number = 2;
   string parent_hash = 3;
   string timestamp = 4;
 }
+ */
